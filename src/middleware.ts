@@ -22,6 +22,8 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
+    // Di Vercel (HTTPS), gunakan secureCookie agar terbaca dengan benar
+    secureCookie: process.env.NODE_ENV === 'production' || request.nextUrl.protocol === 'https:',
   })
 
   const { pathname } = request.nextUrl
