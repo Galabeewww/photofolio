@@ -1,0 +1,45 @@
+// ============================================
+// Schema Database untuk Website Portofolio Photography
+// Menggunakan Prisma ORM dengan PostgreSQL (Supabase)
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Konfigurasi datasource untuk PostgreSQL (Supabase)
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // Koneksi langsung untuk migrasi (bypass connection pooler)
+}
+
+// ============================================
+// Model User - Menyimpan data admin
+// Hanya admin yang bisa login dan melakukan CRUD
+// ============================================
+model User {
+  id        String   @id @default(cuid()) // ID unik menggunakan CUID
+  email     String   @unique              // Email harus unik untuk login
+  password  String                        // Password yang di-hash dengan bcrypt
+  name      String                        // Nama tampilan admin
+  createdAt DateTime @default(now())      // Tanggal akun dibuat
+  updatedAt DateTime @updatedAt           // Tanggal terakhir diupdate
+}
+
+// ============================================
+// Model Portfolio - Menyimpan data foto & video
+// Data ini yang ditampilkan di halaman publik
+// ============================================
+model Portfolio {
+  id           String   @id @default(cuid()) // ID unik untuk setiap portfolio
+  title        String                        // Judul foto/video
+  description  String?                       // Deskripsi (opsional)
+  category     String                        // Kategori: "photo" atau "video"
+  mediaUrls     String[]                      // Array URL media dari Cloudinary
+  thumbnailUrls String[]                      // Array URL thumbnail (auto-generated)
+  tags         String[]                      // Array tag untuk filter
+  featured     Boolean  @default(false)      // Tandai sebagai karya unggulan
+  createdAt    DateTime @default(now())      // Tanggal upload
+  updatedAt    DateTime @updatedAt           // Tanggal terakhir diedit
+}
