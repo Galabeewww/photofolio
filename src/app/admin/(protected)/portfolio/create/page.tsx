@@ -4,6 +4,7 @@
  * ============================================
  * 
  * Halaman form khusus untuk admin untuk menambah foto/video baru (multiple upload).
+ * Dilengkapi dengan fitur unggah cover khusus untuk video dan notifikasi SweetAlert2.
  */
 
 'use client'
@@ -11,7 +12,9 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import MediaUpload from '@/components/MediaUpload'
+import Swal from 'sweetalert2'
 
 export default function CreatePortfolio() {
   const router = useRouter()
@@ -25,6 +28,11 @@ export default function CreatePortfolio() {
   const [tagsInput, setTagsInput] = useState('') // input teks mentah dipisahkan koma
   const [featured, setFeatured] = useState(false)
   
+  // State khusus untuk cover video kustom
+  const [customThumbnailUrl, setCustomThumbnailUrl] = useState('')
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false)
+  const [thumbnailError, setThumbnailError] = useState<string | null>(null)
+  
   // State proses penyimpanan
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -35,6 +43,55 @@ export default function CreatePortfolio() {
   const handleUploadComplete = (data: { urls: string[]; thumbnailUrls: string[] }) => {
     setMediaUrls(data.urls)
     setThumbnailUrls(data.thumbnailUrls)
+  }
+
+  /**
+   * Handler untuk upload cover khusus video
+   */
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    const file = files[0]
+    if (!file.type.startsWith('image/')) {
+      setThumbnailError('Cover kustom harus berupa file gambar!')
+      return
+    }
+
+    setIsUploadingThumbnail(true)
+    setThumbnailError(null)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setCustomThumbnailUrl(data.url)
+        
+        Swal.fire({
+          title: 'Cover Terunggah!',
+          text: 'Cover video kustom berhasil ditambahkan.',
+          icon: 'success',
+          background: '#1E1B4B',
+          color: '#ffffff',
+          confirmButtonColor: '#A855F7',
+        })
+      } else {
+        const data = await response.json()
+        setThumbnailError(data.error || 'Gagal mengupload cover.')
+      }
+    } catch (err) {
+      console.error('Error upload cover:', err)
+      setThumbnailError('Terjadi kesalahan koneksi saat mengupload.')
+    } finally {
+      setIsUploadingThumbnail(false)
+    }
   }
 
   /**
@@ -58,6 +115,11 @@ export default function CreatePortfolio() {
       .map((tag) => tag.trim())
       .filter((tag) => tag !== '')
 
+    // Jika video dan ada cover kustom, gunakan itu sebagai thumbnail utama
+    const finalThumbnailUrls = category === 'video' && customThumbnailUrl
+      ? [customThumbnailUrl]
+      : thumbnailUrls
+
     try {
       const response = await fetch('/api/portfolio', {
         method: 'POST',
@@ -67,16 +129,24 @@ export default function CreatePortfolio() {
           description: description || null,
           category,
           mediaUrls,
-          thumbnailUrls,
+          thumbnailUrls: finalThumbnailUrls,
           tags,
           featured,
         }),
       })
 
       if (response.ok) {
-        alert('Karya portfolio berhasil ditambahkan!')
-        router.push('/admin/dashboard')
-        router.refresh()
+        Swal.fire({
+          title: 'Berhasil!',
+          text: 'Karya portfolio baru berhasil ditambahkan.',
+          icon: 'success',
+          background: '#1E1B4B',
+          color: '#ffffff',
+          confirmButtonColor: '#A855F7',
+        }).then(() => {
+          router.push('/admin/dashboard')
+          router.refresh()
+        })
       } else {
         const data = await response.json()
         setError(data.error || 'Gagal menambahkan portfolio baru')
@@ -111,8 +181,9 @@ export default function CreatePortfolio() {
       {/* Form Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Kolom Kiri: Upload Media (1/3 Kolom) */}
-        <div className="space-y-4">
+        {/* Kolom Kiri: Upload Media & Cover (1/3 Kolom) */}
+        <div className="space-y-6">
+          {/* Box Upload Media Utama */}
           <div className="p-6 rounded-2xl bg-[#1E1B4B]/10 border border-white/5 space-y-4">
             <h3 className="text-sm font-semibold uppercase text-gray-400 tracking-wider">File Media</h3>
             
@@ -129,6 +200,63 @@ export default function CreatePortfolio() {
               </div>
             )}
           </div>
+
+          {/* Box Upload Cover Kustom untuk Video */}
+          {category === 'video' && mediaUrls.length > 0 && (
+            <div className="p-6 rounded-2xl bg-[#1E1B4B]/10 border border-white/5 space-y-4 animate-in slide-in-from-top duration-300">
+              <h3 className="text-sm font-semibold uppercase text-gray-400 tracking-wider">Cover (Thumbnail) Video</h3>
+              <p className="text-xs text-gray-500">Tambahkan gambar kustom untuk cover depan video pada daftar kartu portofolio.</p>
+              
+              {/* Preview Cover Kustom */}
+              {customThumbnailUrl ? (
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10 group">
+                  <Image
+                    src={customThumbnailUrl}
+                    alt="Custom Thumbnail Preview"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setCustomThumbnailUrl('')}
+                      className="px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition-colors"
+                    >
+                      Hapus Cover
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative border border-white/10 rounded-xl p-4 bg-white/5 flex flex-col items-center justify-center text-center">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleThumbnailUpload}
+                    disabled={isUploadingThumbnail}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  />
+                  {isUploadingThumbnail ? (
+                    <div className="space-y-2">
+                      <div className="w-6 h-6 mx-auto rounded-full border-2 border-[#A855F7]/30 border-t-[#A855F7] animate-spin" />
+                      <p className="text-xs text-gray-400">Mengunggah...</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <svg className="w-6 h-6 mx-auto text-[#A855F7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <p className="text-xs font-medium text-white">Klik untuk upload cover kustom</p>
+                      <p className="text-[10px] text-gray-500">Format gambar (.jpg, .png, .webp)</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {thumbnailError && (
+                <p className="text-xs text-red-400 mt-1">⚠️ {thumbnailError}</p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Kolom Kanan: Form Data (2/3 Kolom) */}
@@ -168,6 +296,7 @@ export default function CreatePortfolio() {
                   // Reset URL media jika ganti tipe agar terupload ulang
                   setMediaUrls([])
                   setThumbnailUrls([])
+                  setCustomThumbnailUrl('')
                 }}
                 className="w-full px-4 py-3 rounded-xl bg-[#030712] border border-white/10 text-white focus:outline-none focus:border-[#A855F7] focus:ring-1 focus:ring-[#A855F7] transition-all"
               >

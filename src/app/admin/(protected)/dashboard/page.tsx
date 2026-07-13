@@ -17,6 +17,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Swal from "sweetalert2";
 
 // Representasi struktur data portfolio
 interface PortfolioItem {
@@ -60,14 +61,24 @@ export default function AdminDashboard() {
 
   /**
    * Handler untuk menghapus portfolio.
-   * Mengirim request DELETE ke API endpoint /api/portfolio/[id].
+   * Mengirim request DELETE ke API endpoint /api/portfolio/[id] dengan konfirmasi SweetAlert2.
    */
   const handleDelete = async (id: string, title: string) => {
-    // Tampilkan konfirmasi browser sederhana
-    const confirmDelete = window.confirm(
-      `Apakah Anda yakin ingin menghapus "${title}" secara permanen?`,
-    );
-    if (!confirmDelete) return;
+    // Tampilkan konfirmasi SweetAlert2 yang interaktif dan modern
+    const result = await Swal.fire({
+      title: "Apakah Anda yakin?",
+      text: `Karya "${title}" akan dihapus secara permanen dan tidak dapat dikembalikan!`,
+      icon: "warning",
+      showCancelButton: true,
+      background: "#1E1B4B",
+      color: "#ffffff",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#A855F7",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
 
     setDeletingId(id);
 
@@ -79,14 +90,36 @@ export default function AdminDashboard() {
       if (response.ok) {
         // Hapus item dari state lokal agar tabel terupdate secara instan
         setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-        alert("Portfolio berhasil dihapus!");
+        
+        Swal.fire({
+          title: "Terhapus!",
+          text: "Karya portfolio berhasil dihapus.",
+          icon: "success",
+          background: "#1E1B4B",
+          color: "#ffffff",
+          confirmButtonColor: "#A855F7",
+        });
       } else {
         const data = await response.json();
-        alert(data.error || "Gagal menghapus portfolio");
+        Swal.fire({
+          title: "Gagal!",
+          text: data.error || "Gagal menghapus portfolio",
+          icon: "error",
+          background: "#1E1B4B",
+          color: "#ffffff",
+          confirmButtonColor: "#A855F7",
+        });
       }
     } catch (error) {
       console.error("Error saat menghapus:", error);
-      alert("Terjadi kesalahan sistem saat menghapus");
+      Swal.fire({
+        title: "Error!",
+        text: "Terjadi kesalahan sistem saat menghapus karya.",
+        icon: "error",
+        background: "#1E1B4B",
+        color: "#ffffff",
+        confirmButtonColor: "#A855F7",
+      });
     } finally {
       setDeletingId(null);
     }
