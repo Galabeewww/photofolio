@@ -19,6 +19,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
+import { checkIsVideo, getOptimizedVideoUrl } from '@/lib/utils'
 
 interface LightboxProps {
   isOpen: boolean          // Status buka/tutup lightbox
@@ -72,7 +73,7 @@ export default function Lightbox({ isOpen, onClose, mediaUrls, category, title, 
   if (!isOpen || mediaUrls.length === 0) return null
 
   const currentUrl = mediaUrls[currentIndex]
-  const isVideo = category === 'video' || currentUrl?.includes('/video/upload/')
+  const isVideo = checkIsVideo(currentUrl)
   const totalSlides = mediaUrls.length
 
   return (
@@ -123,7 +124,7 @@ export default function Lightbox({ isOpen, onClose, mediaUrls, category, title, 
           // Video Player
           <video
             key={currentUrl}
-            src={currentUrl}
+            src={getOptimizedVideoUrl(currentUrl)}
             controls
             autoPlay
             className="max-w-full max-h-[80vh] rounded-lg"

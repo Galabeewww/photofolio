@@ -17,6 +17,7 @@
 
 import { useState, useCallback } from "react";
 import Image from "next/image";
+import { checkIsVideo } from "@/lib/utils";
 
 interface MediaUploadProps {
   onUploadComplete: (data: { urls: string[]; thumbnailUrls: string[] }) => void; // Callback setelah upload selesai
@@ -248,11 +249,7 @@ export default function MediaUpload({
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {previews.map((url, idx) => {
-              const isVideo =
-                url.includes("/video/upload/") ||
-                url.endsWith(".mp4") ||
-                url.endsWith(".webm") ||
-                (url.startsWith("blob:") && category === "video");
+              const isVideo = checkIsVideo(url);
 
               return (
                 <div
@@ -260,7 +257,17 @@ export default function MediaUpload({
                   className="relative group rounded-lg overflow-hidden aspect-video bg-[#5D0E41]/30 border border-white/10"
                 >
                   {isVideo ? (
-                    <video src={url} className="w-full h-full object-cover" />
+                    // <video src={url} className="w-full h-full object-cover" />
+                    <video
+                      src={url}
+                      className="w-full h-full object-cover"
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onMouseEnter={(e) => e.currentTarget.play()}
+                      onMouseLeave={(e) => e.currentTarget.pause()}
+                    />
                   ) : (
                     <Image
                       src={url}

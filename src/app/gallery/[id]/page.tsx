@@ -19,6 +19,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Lightbox from '@/components/Lightbox'
+import { checkIsVideo, getOptimizedVideoUrl } from '@/lib/utils'
 
 interface PortfolioItem {
   id: string
@@ -90,7 +91,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
   const goToNext = () => setCurrentSlide((prev) => (prev < totalMedia - 1 ? prev + 1 : 0))
 
   const currentUrl = mediaUrls[currentSlide] || ''
-  const isVideo = item.category === 'video' || currentUrl.includes('/video/upload/')
+  const isVideo = checkIsVideo(currentUrl)
 
   return (
     <div className="min-h-screen bg-[#00224D] py-12 px-4 sm:px-6 lg:px-8">
@@ -120,7 +121,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
               {isVideo ? (
                 <video
                   key={currentUrl}
-                  src={currentUrl}
+                  src={getOptimizedVideoUrl(currentUrl)}
                   controls
                   className="w-full h-full max-h-[60vh] object-contain"
                 >
@@ -182,7 +183,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
             {totalMedia > 1 && (
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
                 {mediaUrls.map((url, idx) => {
-                  const thumbIsVideo = url.includes('/video/upload/')
+                  const thumbIsVideo = checkIsVideo(url)
                   return (
                     <button
                       key={idx}

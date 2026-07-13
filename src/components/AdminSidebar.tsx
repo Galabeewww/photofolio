@@ -57,7 +57,7 @@ export default function AdminSidebar() {
       {/* Tombol toggle sidebar untuk mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-20 left-4 z-40 p-2 rounded-lg bg-[#5D0E41] text-white shadow-lg"
+        className="lg:hidden fixed top-3 right-4 z-50 p-2.5 rounded-lg bg-gradient-to-r from-[#FF204E] to-[#A0153E] text-white shadow-lg"
       >
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
