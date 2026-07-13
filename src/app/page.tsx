@@ -33,20 +33,20 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#00224D]">
+    <div className="min-h-screen bg-[#030712]">
       {/* 1. Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-4">
         {/* Background gradient radial yang dramatis */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(93,14,65,0.4)_0%,rgba(0,34,77,1)_80%)] z-0" />
         
         {/* Dekorasi lingkaran cahaya berpendar */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#FF204E]/10 blur-[120px] animate-pulse duration-5000" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#A0153E]/10 blur-[120px] animate-pulse duration-3000" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#A855F7]/10 blur-[120px] animate-pulse duration-5000" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#7C3AED]/10 blur-[120px] animate-pulse duration-3000" />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
           {/* Badge kecil di atas judul */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-[#FF204E] animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[#A855F7] animate-ping" />
             <span className="text-xs font-semibold uppercase tracking-wider text-gray-300">
               Kamera & Lensa Profesional
             </span>
@@ -55,7 +55,7 @@ export default async function Home() {
           {/* Headline utama */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-none">
             Mengabadikan Kisah <br />
-            Lewat Keindahan <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF204E] via-[#A0153E] to-[#5D0E41]">Visual</span>
+            Lewat Keindahan <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A855F7] via-[#7C3AED] to-[#1E1B4B]">Visual</span>
           </h1>
 
           {/* Deskripsi */}
@@ -67,7 +67,7 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Link
               href="/gallery"
-              className="px-8 py-4 rounded-xl text-base font-semibold bg-gradient-to-r from-[#FF204E] to-[#A0153E] text-white shadow-xl shadow-[#FF204E]/25 hover:shadow-[#FF204E]/40 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
+              className="px-8 py-4 rounded-xl text-base font-semibold bg-gradient-to-r from-[#A855F7] to-[#7C3AED] text-white shadow-xl shadow-[#A855F7]/25 hover:shadow-[#A855F7]/40 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
             >
               Jelajahi Galeri
             </Link>
@@ -85,7 +85,7 @@ export default async function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-white/5">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
-            <span className="text-[#FF204E] text-sm font-semibold uppercase tracking-wider">Karya Pilihan</span>
+            <span className="text-[#A855F7] text-sm font-semibold uppercase tracking-wider">Karya Pilihan</span>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mt-1">Karya Unggulan</h2>
           </div>
           <Link
@@ -117,7 +117,7 @@ export default async function Home() {
           </div>
         ) : (
           // Jika belum ada data
-          <div className="text-center py-20 bg-[#5D0E41]/10 rounded-2xl border border-white/5">
+          <div className="text-center py-20 bg-[#1E1B4B]/10 rounded-2xl border border-white/5">
             <svg className="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -130,12 +130,12 @@ export default async function Home() {
       </section>
 
       {/* 3. About & Services Section */}
-      <section className="bg-[#5D0E41]/10 py-24 border-y border-white/5">
+      <section className="bg-[#1E1B4B]/10 py-24 border-y border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Sisi Kiri: Deskripsi */}
             <div className="space-y-6">
-              <span className="text-[#FF204E] text-sm font-semibold uppercase tracking-wider">Layanan Kami</span>
+              <span className="text-[#A855F7] text-sm font-semibold uppercase tracking-wider">Layanan Kami</span>
               <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
                 Membantu Anda Merekam <br />
                 Momen Indah Dalam Hidup
@@ -145,11 +145,11 @@ export default async function Home() {
               </p>
               
               <div className="grid grid-cols-2 gap-6 pt-4">
-                <div className="space-y-2 border-l-2 border-[#FF204E] pl-4">
+                <div className="space-y-2 border-l-2 border-[#A855F7] pl-4">
                   <h4 className="text-2xl font-bold text-white">500+</h4>
                   <p className="text-gray-400 text-sm">Klien Puas</p>
                 </div>
-                <div className="space-y-2 border-l-2 border-[#FF204E] pl-4">
+                <div className="space-y-2 border-l-2 border-[#A855F7] pl-4">
                   <h4 className="text-2xl font-bold text-white">10+</h4>
                   <p className="text-gray-400 text-sm">Tahun Pengalaman</p>
                 </div>
@@ -159,8 +159,8 @@ export default async function Home() {
             {/* Sisi Kanan: Kartu Fitur Layanan */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Jasa Foto */}
-              <div className="p-6 rounded-2xl bg-[#00224D] border border-white/5 hover:border-[#FF204E]/30 transition-all duration-300 space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-[#FF204E]/10 flex items-center justify-center text-[#FF204E]">
+              <div className="p-6 rounded-2xl bg-[#030712] border border-white/5 hover:border-[#A855F7]/30 transition-all duration-300 space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-[#A855F7]/10 flex items-center justify-center text-[#A855F7]">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   </svg>
@@ -172,8 +172,8 @@ export default async function Home() {
               </div>
 
               {/* Jasa Video */}
-              <div className="p-6 rounded-2xl bg-[#00224D] border border-white/5 hover:border-[#FF204E]/30 transition-all duration-300 space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-[#FF204E]/10 flex items-center justify-center text-[#FF204E]">
+              <div className="p-6 rounded-2xl bg-[#030712] border border-white/5 hover:border-[#A855F7]/30 transition-all duration-300 space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-[#A855F7]/10 flex items-center justify-center text-[#A855F7]">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
@@ -197,7 +197,7 @@ export default async function Home() {
         <div>
           <a
             href="mailto:contact@lensfolio.com"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold bg-gradient-to-r from-[#FF204E] to-[#A0153E] text-white shadow-xl shadow-[#FF204E]/25 hover:shadow-[#FF204E]/40 hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold bg-gradient-to-r from-[#A855F7] to-[#7C3AED] text-white shadow-xl shadow-[#A855F7]/25 hover:shadow-[#A855F7]/40 hover:scale-105 transition-all duration-300"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

@@ -122,8 +122,8 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#00224D] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-full border-4 border-[#FF204E]/20 border-t-[#FF204E] animate-spin" />
+      <div className="min-h-screen bg-[#030712] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-full border-4 border-[#A855F7]/20 border-t-[#A855F7] animate-spin" />
         <p className="text-gray-400 text-sm">Memuat data portfolio lama...</p>
       </div>
     )
@@ -153,7 +153,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
         
         {/* Kolom Kiri: Upload Media (1/3 Kolom) */}
         <div className="space-y-4">
-          <div className="p-6 rounded-2xl bg-[#5D0E41]/10 border border-white/5 space-y-4">
+          <div className="p-6 rounded-2xl bg-[#1E1B4B]/10 border border-white/5 space-y-4">
             <h3 className="text-sm font-semibold uppercase text-gray-400 tracking-wider">File Media</h3>
             
             {/* Widget Media Upload dengan mediaUrls saat ini sebagai preview awal */}
@@ -171,7 +171,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
 
         {/* Kolom Kanan: Form Data (2/3 Kolom) */}
         <div className="lg:col-span-2">
-          <form onSubmit={handleSubmit} className="p-6 rounded-2xl bg-[#5D0E41]/10 border border-white/5 space-y-6">
+          <form onSubmit={handleSubmit} className="p-6 rounded-2xl bg-[#1E1B4B]/10 border border-white/5 space-y-6">
             
             {/* Tampilan Error */}
             {error && (
@@ -192,7 +192,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
                 placeholder="Contoh: Sunset di Pantai Kuta"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-[#FF204E] focus:ring-1 focus:ring-[#FF204E] transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-[#A855F7] focus:ring-1 focus:ring-[#A855F7] transition-all"
               />
             </div>
 
@@ -202,7 +202,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-[#00224D] border border-white/10 text-white focus:outline-none focus:border-[#FF204E] focus:ring-1 focus:ring-[#FF204E] transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-[#030712] border border-white/10 text-white focus:outline-none focus:border-[#A855F7] focus:ring-1 focus:ring-[#A855F7] transition-all"
               >
                 <option value="photo">Foto (Photography)</option>
                 <option value="video">Video (Videography)</option>
@@ -217,7 +217,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
                 placeholder="Tuliskan cerita di balik karya atau spesifikasi teknis..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-[#FF204E] focus:ring-1 focus:ring-[#FF204E] transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-[#A855F7] focus:ring-1 focus:ring-[#A855F7] transition-all resize-none"
               />
             </div>
 
@@ -229,7 +229,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
                 placeholder="Contoh: wedding, cinematic, portrait, travel"
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-[#FF204E] focus:ring-1 focus:ring-[#FF204E] transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-[#A855F7] focus:ring-1 focus:ring-[#A855F7] transition-all"
               />
               <p className="text-xs text-gray-500 mt-1">Tags dipisahkan koma untuk memudahkan kategorisasi pencarian.</p>
             </div>
@@ -241,7 +241,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
                 id="featured"
                 checked={featured}
                 onChange={(e) => setFeatured(e.target.checked)}
-                className="w-5 h-5 rounded border-white/10 text-[#FF204E] focus:ring-[#FF204E] bg-transparent"
+                className="w-5 h-5 rounded border-white/10 text-[#A855F7] focus:ring-[#A855F7] bg-transparent"
               />
               <div>
                 <label htmlFor="featured" className="text-sm font-semibold text-white block cursor-pointer">
@@ -262,7 +262,7 @@ export default function EditPortfolio({ params }: { params: Promise<{ id: string
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#FF204E] to-[#A0153E] text-white hover:opacity-90 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                className="px-6 py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#A855F7] to-[#7C3AED] text-white hover:opacity-90 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
               >
                 {isSubmitting ? (
                   <>

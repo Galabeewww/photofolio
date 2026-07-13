@@ -162,7 +162,7 @@ export default function Lightbox({ isOpen, onClose, mediaUrls, category, title, 
                     onClick={() => setCurrentIndex(idx)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       idx === currentIndex
-                        ? 'bg-[#FF204E] w-6'
+                        ? 'bg-[#A855F7] w-6'
                         : 'bg-white/30 hover:bg-white/50'
                     }`}
                   />

@@ -4,15 +4,15 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   
-  --color-theme-primary: #FF204E;
-  --color-theme-secondary: #A0153E;
-  --color-theme-dark: #5D0E41;
-  --color-theme-navy: #00224D;
+  --color-theme-primary: #A855F7;
+  --color-theme-secondary: #7C3AED;
+  --color-theme-dark: #1E1B4B;
+  --color-theme-navy: #030712;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: #00224D; /* Navy background */
+  background-color: #030712; /* Navy background */
   color: #ffffff;
 }
 
@@ -25,12 +25,12 @@ h1, h2, h3, h4, h5, h6 {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #00224D;
+  background: #030712;
 }
 ::-webkit-scrollbar-thumb {
-  background: #5D0E41;
+  background: #1E1B4B;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #A0153E;
+  background: #7C3AED;
 }

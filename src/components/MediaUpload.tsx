@@ -1,15 +1,20 @@
 /**
  * ============================================
- * Komponen MediaUpload (Multiple Upload)
+ * Komponen MediaUpload (Single Type Upload)
  * ============================================
  *
- * Widget upload file untuk mengunggah beberapa foto dan video sekaligus.
+ * Widget upload file untuk mengunggah beberapa foto ATAU video sekaligus.
+ * ATURAN: Hanya satu jenis file yang boleh diupload per sesi.
+ * - Jika kategori "photo": hanya menerima file gambar
+ * - Jika kategori "video": hanya menerima file video
+ * - Tidak boleh campuran foto dan video
+ *
  * Fitur:
  * - Drag & drop beberapa file sekaligus
  * - Klik untuk memilih beberapa file
+ * - Validasi jenis file berdasarkan kategori yang dipilih
  * - Preview gallery file yang dipilih dengan tombol hapus
  * - Progress bar upload kumulatif
- * - Validasi tipe file (gambar & video)
  * - Upload ke server via API /api/upload
  */
 
@@ -20,9 +25,9 @@ import Image from "next/image";
 import { checkIsVideo } from "@/lib/utils";
 
 interface MediaUploadProps {
-  onUploadComplete: (data: { urls: string[]; thumbnailUrls: string[] }) => void; // Callback setelah upload selesai
-  currentMediaUrls?: string[]; // URL media saat ini (untuk mode edit)
-  category?: string; // Kategori media: "photo" atau "video"
+  onUploadComplete: (data: { urls: string[]; thumbnailUrls: string[] }) => void;
+  currentMediaUrls?: string[];
+  category?: string; // "photo" atau "video" — menentukan jenis file yang diterima
 }
 
 export default function MediaUpload({
@@ -30,15 +35,25 @@ export default function MediaUpload({
   currentMediaUrls = [],
   category,
 }: MediaUploadProps) {
-  // State untuk tracking proses upload
-  const [isUploading, setIsUploading] = useState(false); // Status sedang mengupload
-  const [previews, setPreviews] = useState<string[]>(currentMediaUrls); // List preview file
-  const [isDragging, setIsDragging] = useState(false); // Status drag & drop
-  const [error, setError] = useState<string | null>(null); // Pesan error
-  const [progress, setProgress] = useState<number>(0); // Progress persen
+  const [isUploading, setIsUploading] = useState(false);
+  const [previews, setPreviews] = useState<string[]>(currentMediaUrls);
+  const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+
+  // Tentukan tipe file yang diizinkan berdasarkan kategori
+  const allowedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const allowedVideoTypes = ["video/mp4", "video/webm", "video/mov", "video/quicktime"];
+
+  // Tentukan accept attribute untuk input file berdasarkan kategori
+  const acceptAttribute = category === "video" ? "video/*" : "image/*";
+
+  // Label jenis file yang diharapkan (untuk pesan error)
+  const expectedTypeLabel = category === "video" ? "video" : "foto/gambar";
 
   /**
-   * Fungsi untuk mengupload beberapa file ke server secara sekuensial
+   * Fungsi untuk mengupload beberapa file ke server secara sekuensial.
+   * Validasi jenis file dilakukan berdasarkan kategori yang dipilih.
    */
   const uploadFiles = useCallback(
     async (files: FileList | File[]) => {
@@ -51,29 +66,38 @@ export default function MediaUpload({
       const objectUrls: string[] = [];
 
       try {
-        const allowedImageTypes = [
-          "image/jpeg",
-          "image/png",
-          "image/webp",
-          "image/gif",
-        ];
-        const allowedVideoTypes = [
-          "video/mp4",
-          "video/webm",
-          "video/mov",
-          "video/quicktime",
-        ];
-        const allowedTypes = [...allowedImageTypes, ...allowedVideoTypes];
+        // Tentukan tipe yang diizinkan berdasarkan kategori
+        const allowedTypes =
+          category === "video" ? allowedVideoTypes : allowedImageTypes;
 
         // 1. Validasi tipe & ukuran semua file terlebih dahulu
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
+
+          // Cek apakah file sesuai dengan kategori yang dipilih
           if (!allowedTypes.includes(file.type)) {
-            throw new Error(`Tipe file "${file.name}" tidak didukung.`);
+            // Berikan pesan error yang jelas tentang ketidakcocokan jenis file
+            const fileIsVideo = file.type.startsWith("video/");
+            const fileIsImage = file.type.startsWith("image/");
+
+            if (category === "video" && fileIsImage) {
+              throw new Error(
+                `File "${file.name}" adalah gambar. Kategori yang dipilih adalah Video, jadi hanya file video yang diizinkan.`
+              );
+            } else if (category === "photo" && fileIsVideo) {
+              throw new Error(
+                `File "${file.name}" adalah video. Kategori yang dipilih adalah Foto, jadi hanya file gambar yang diizinkan.`
+              );
+            } else {
+              throw new Error(
+                `Tipe file "${file.name}" (${file.type}) tidak didukung. Hanya file ${expectedTypeLabel} yang diizinkan.`
+              );
+            }
           }
+
           if (file.size > 100 * 1024 * 1024) {
             throw new Error(
-              `Ukuran file "${file.name}" terlalu besar (Maks. 100MB).`,
+              `Ukuran file "${file.name}" terlalu besar (Maks. 100MB).`
             );
           }
           objectUrls.push(URL.createObjectURL(file));
@@ -100,7 +124,6 @@ export default function MediaUpload({
 
           const data = await response.json();
           uploadedUrls.push(data.url);
-          // Jika video gunakan thumbnail dari cloudinary, jika image gunakan url aslinya
           uploadedThumbnails.push(data.thumbnailUrl || data.url);
 
           // Update progress
@@ -117,16 +140,16 @@ export default function MediaUpload({
         });
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Terjadi kesalahan saat upload",
+          err instanceof Error ? err.message : "Terjadi kesalahan saat upload"
         );
-        // Reset preview ke daftar media yang berhasil terunggah
+        // Reset preview ke daftar media yang sudah ada
         setPreviews(currentMediaUrls);
       } finally {
         setIsUploading(false);
         setProgress(0);
       }
     },
-    [onUploadComplete, currentMediaUrls],
+    [onUploadComplete, currentMediaUrls, category, allowedImageTypes, allowedVideoTypes, expectedTypeLabel]
   );
 
   /**
@@ -139,7 +162,7 @@ export default function MediaUpload({
       const files = e.dataTransfer.files;
       if (files && files.length > 0) uploadFiles(files);
     },
-    [uploadFiles],
+    [uploadFiles]
   );
 
   /**
@@ -150,7 +173,7 @@ export default function MediaUpload({
       const files = e.target.files;
       if (files && files.length > 0) uploadFiles(files);
     },
-    [uploadFiles],
+    [uploadFiles]
   );
 
   /**
@@ -161,12 +184,35 @@ export default function MediaUpload({
     setPreviews(updatedUrls);
     onUploadComplete({
       urls: updatedUrls,
-      thumbnailUrls: updatedUrls, // Sederhanakan untuk mode edit/hapus
+      thumbnailUrls: updatedUrls,
     });
   };
 
   return (
     <div className="space-y-4">
+      {/* Indikator jenis file yang diterima */}
+      <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium ${
+        category === "video"
+          ? "bg-violet-500/10 border border-violet-500/20 text-violet-300"
+          : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-300"
+      }`}>
+        {category === "video" ? (
+          <>
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Mode Video — Hanya file video yang diterima (.mp4, .webm, .mov)
+          </>
+        ) : (
+          <>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            </svg>
+            Mode Foto — Hanya file gambar yang diterima (.jpg, .png, .webp, .gif)
+          </>
+        )}
+      </div>
+
       {/* Area drag & drop / klik untuk upload */}
       <div
         onDrop={handleDrop}
@@ -177,14 +223,14 @@ export default function MediaUpload({
         onDragLeave={() => setIsDragging(false)}
         className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 cursor-pointer ${
           isDragging
-            ? "border-[#FF204E] bg-[#FF204E]/10"
-            : "border-white/20 hover:border-[#FF204E]/50 hover:bg-white/5"
+            ? "border-[#A855F7] bg-[#A855F7]/10"
+            : "border-white/20 hover:border-[#A855F7]/50 hover:bg-white/5"
         }`}
       >
         <input
           type="file"
-          accept="image/*,video/*"
-          multiple // Izinkan upload banyak file sekaligus
+          accept={acceptAttribute}
+          multiple
           onChange={handleFileSelect}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
@@ -192,42 +238,49 @@ export default function MediaUpload({
         {/* Tampilan saat sedang upload */}
         {isUploading ? (
           <div className="space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-full border-4 border-[#FF204E]/30 border-t-[#FF204E] animate-spin" />
+            <div className="w-12 h-12 mx-auto rounded-full border-4 border-[#A855F7]/30 border-t-[#A855F7] animate-spin" />
             <p className="text-gray-400 text-sm">
               Mengunggah file ({progress}%)...
             </p>
             <div className="w-full bg-white/10 rounded-full h-1.5 max-w-xs mx-auto overflow-hidden">
               <div
-                className="bg-gradient-to-r from-[#FF204E] to-[#A0153E] h-1.5 transition-all duration-300"
+                className="bg-gradient-to-r from-[#A855F7] to-[#7C3AED] h-1.5 transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-full bg-[#FF204E]/10 flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-[#FF204E]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+            <div className="w-12 h-12 mx-auto rounded-full bg-[#A855F7]/10 flex items-center justify-center">
+              {category === "video" ? (
+                <svg className="w-6 h-6 text-[#A855F7]" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              ) : (
+                <svg
+                  className="w-6 h-6 text-[#A855F7]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              )}
             </div>
             <div>
               <p className="text-white text-sm font-medium">
-                Drag & drop beberapa file atau{" "}
-                <span className="text-[#FF204E]">klik untuk browse</span>
+                Drag & drop beberapa {category === "video" ? "video" : "foto"} atau{" "}
+                <span className="text-[#A855F7]">klik untuk browse</span>
               </p>
               <p className="text-gray-500 text-xs mt-1">
-                Mendukung upload beberapa Gambar atau Video sekaligus (Maks.
-                100MB per file)
+                {category === "video"
+                  ? "Hanya file Video yang diterima (.mp4, .webm, .mov — Maks. 100MB per file)"
+                  : "Hanya file Gambar yang diterima (.jpg, .png, .webp, .gif — Maks. 100MB per file)"}
               </p>
             </div>
           </div>
@@ -254,10 +307,9 @@ export default function MediaUpload({
               return (
                 <div
                   key={idx}
-                  className="relative group rounded-lg overflow-hidden aspect-video bg-[#5D0E41]/30 border border-white/10"
+                  className="relative group rounded-lg overflow-hidden aspect-video bg-[#1E1B4B]/30 border border-white/10"
                 >
                   {isVideo ? (
-                    // <video src={url} className="w-full h-full object-cover" />
                     <video
                       src={url}
                       className="w-full h-full object-cover"

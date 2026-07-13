@@ -70,12 +70,12 @@ export default function Gallery() {
   })
 
   return (
-    <div className="min-h-screen bg-[#00224D] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#030712] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-12">
         
         {/* Header Galeri */}
         <div className="text-center space-y-4">
-          <span className="text-[#FF204E] text-sm font-semibold uppercase tracking-wider">Koleksi Karya</span>
+          <span className="text-[#A855F7] text-sm font-semibold uppercase tracking-wider">Koleksi Karya</span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Galeri Karya</h1>
           <p className="max-w-2xl mx-auto text-gray-400 font-light">
             Menampilkan jepretan momen tak terlupakan serta rekaman video sinematik terbaik kami. Gunakan filter di bawah untuk memilah karya.
@@ -83,7 +83,7 @@ export default function Gallery() {
         </div>
 
         {/* Filter dan Pencarian Panel */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 p-4 rounded-2xl bg-[#5D0E41]/10 border border-white/5 backdrop-blur-md">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 p-4 rounded-2xl bg-[#1E1B4B]/10 border border-white/5 backdrop-blur-md">
           {/* Filter Kategori */}
           <div className="flex flex-wrap gap-2">
             {[
@@ -96,7 +96,7 @@ export default function Gallery() {
                 onClick={() => setActiveCategory(tab.id)}
                 className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                   activeCategory === tab.id
-                    ? 'bg-gradient-to-r from-[#FF204E] to-[#A0153E] text-white shadow-lg shadow-[#FF204E]/20'
+                    ? 'bg-gradient-to-r from-[#A855F7] to-[#7C3AED] text-white shadow-lg shadow-[#A855F7]/20'
                     : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
                 }`}
               >
@@ -112,7 +112,7 @@ export default function Gallery() {
               placeholder="Cari judul atau deskripsi..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-5 py-3 pl-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#FF204E] focus:ring-1 focus:ring-[#FF204E] transition-all"
+              className="w-full px-5 py-3 pl-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#A855F7] focus:ring-1 focus:ring-[#A855F7] transition-all"
             />
             {/* Ikon Kaca Pembesar */}
             <svg className="w-5 h-5 text-gray-500 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +125,7 @@ export default function Gallery() {
         {isLoading ? (
           // Spinner Loading
           <div className="flex flex-col items-center justify-center py-32 space-y-4">
-            <div className="w-12 h-12 rounded-full border-4 border-[#FF204E]/20 border-t-[#FF204E] animate-spin" />
+            <div className="w-12 h-12 rounded-full border-4 border-[#A855F7]/20 border-t-[#A855F7] animate-spin" />
             <p className="text-gray-400 text-sm animate-pulse">Memuat galeri karya...</p>
           </div>
         ) : filteredItems.length > 0 ? (
@@ -146,7 +146,7 @@ export default function Gallery() {
           </div>
         ) : (
           // Jika Tidak Ada Hasil
-          <div className="text-center py-32 bg-[#5D0E41]/10 rounded-2xl border border-white/5">
+          <div className="text-center py-32 bg-[#1E1B4B]/10 rounded-2xl border border-white/5">
             <svg className="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>

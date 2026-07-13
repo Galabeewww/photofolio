@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${outfit.variable} ${inter.variable} h-full scroll-smooth`}>
-      <body className="font-sans bg-[#00224D] text-white min-h-screen flex flex-col antialiased">
+      <body className="font-sans bg-[#030712] text-white min-h-screen flex flex-col antialiased">
         <SessionProvider>
           {/* Navbar selalu berada di bagian atas layar (fixed) */}
           <Navbar />

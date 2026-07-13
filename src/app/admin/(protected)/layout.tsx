@@ -35,8 +35,8 @@ export default function ProtectedLayout({
   // Tampilkan layar loading saat memeriksa status autentikasi
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-[#00224D] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-full border-4 border-[#FF204E]/20 border-t-[#FF204E] animate-spin" />
+      <div className="min-h-screen bg-[#030712] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-full border-4 border-[#A855F7]/20 border-t-[#A855F7] animate-spin" />
         <p className="text-gray-400 text-sm">Memuat halaman admin...</p>
       </div>
     )
@@ -46,7 +46,7 @@ export default function ProtectedLayout({
   if (status === 'unauthenticated') return null
 
   return (
-    <div className="min-h-screen bg-[#00224D] text-white flex">
+    <div className="min-h-screen bg-[#030712] text-white flex">
       {/* Sidebar Admin */}
       <AdminSidebar />
       

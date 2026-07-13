@@ -67,8 +67,8 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#00224D] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-full border-4 border-[#FF204E]/20 border-t-[#FF204E] animate-spin" />
+      <div className="min-h-screen bg-[#030712] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-full border-4 border-[#A855F7]/20 border-t-[#A855F7] animate-spin" />
         <p className="text-gray-400 text-sm">Memuat detail media...</p>
       </div>
     )
@@ -94,7 +94,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
   const isVideo = checkIsVideo(currentUrl)
 
   return (
-    <div className="min-h-screen bg-[#00224D] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#030712] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">
         
         {/* Tombol Kembali */}
@@ -117,7 +117,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
           <div className="lg:col-span-2 space-y-4">
             
             {/* Media Utama */}
-            <div className="relative rounded-2xl overflow-hidden bg-[#5D0E41]/20 border border-white/10 group aspect-video lg:aspect-auto lg:h-[60vh] flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden bg-[#1E1B4B]/20 border border-white/10 group aspect-video lg:aspect-auto lg:h-[60vh] flex items-center justify-center">
               {isVideo ? (
                 <video
                   key={currentUrl}
@@ -145,7 +145,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
                 <>
                   <button
                     onClick={goToPrev}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-[#00224D]/70 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#FF204E]"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-[#030712]/70 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#A855F7]"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -153,7 +153,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
                   </button>
                   <button
                     onClick={goToNext}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-[#00224D]/70 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#FF204E]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-[#030712]/70 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#A855F7]"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -161,7 +161,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
                   </button>
 
                   {/* Counter Slide */}
-                  <div className="absolute top-3 left-3 px-3 py-1.5 rounded-full bg-[#00224D]/70 backdrop-blur-md text-white text-xs font-medium">
+                  <div className="absolute top-3 left-3 px-3 py-1.5 rounded-full bg-[#030712]/70 backdrop-blur-md text-white text-xs font-medium">
                     {currentSlide + 1} / {totalMedia}
                   </div>
                 </>
@@ -170,7 +170,7 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
               {/* Tombol Layar Penuh */}
               <button
                 onClick={() => setIsLightboxOpen(true)}
-                className="absolute bottom-4 right-4 p-3 rounded-xl bg-[#00224D]/80 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#FF204E]"
+                className="absolute bottom-4 right-4 p-3 rounded-xl bg-[#030712]/80 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-[#A855F7]"
                 title="Perbesar Gambar"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,12 +190,12 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
                       onClick={() => setCurrentSlide(idx)}
                       className={`relative shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
                         idx === currentSlide
-                          ? 'border-[#FF204E] ring-1 ring-[#FF204E]/50'
+                          ? 'border-[#A855F7] ring-1 ring-[#A855F7]/50'
                           : 'border-white/10 hover:border-white/30 opacity-60 hover:opacity-100'
                       }`}
                     >
                       {thumbIsVideo ? (
-                        <div className="w-full h-full bg-[#5D0E41]/40 flex items-center justify-center">
+                        <div className="w-full h-full bg-[#1E1B4B]/40 flex items-center justify-center">
                           <svg className="w-6 h-6 text-white/70" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z" />
                           </svg>
@@ -217,16 +217,16 @@ export default function GalleryDetail({ params }: { params: Promise<{ id: string
           </div>
 
           {/* Sisi Kanan: Deskripsi & Metadata (1/3 Kolom) */}
-          <div className="p-6 rounded-2xl bg-[#5D0E41]/10 border border-white/5 space-y-6 h-fit">
+          <div className="p-6 rounded-2xl bg-[#1E1B4B]/10 border border-white/5 space-y-6 h-fit">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                  item.category === 'video' ? 'bg-[#FF204E]/20 text-[#FF204E]' : 'bg-white/10 text-white'
+                  item.category === 'video' ? 'bg-[#A855F7]/20 text-[#A855F7]' : 'bg-white/10 text-white'
                 }`}>
                   {item.category === 'video' ? 'Video Project' : 'Photography'}
                 </span>
                 {totalMedia > 1 && (
-                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#00224D] text-gray-300 border border-white/10">
+                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#030712] text-gray-300 border border-white/10">
                     {totalMedia} Media
                   </span>
                 )}
