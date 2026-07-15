@@ -30,6 +30,34 @@ interface PortfolioItem {
   createdAt: string;
 }
 
+// export default function AdminDashboard() {
+//   // State untuk daftar portfolio
+//   const [items, setItems] = useState<PortfolioItem[]>([]);
+
+//   // State loading
+//   const [isLoading, setIsLoading] = useState(true);
+
+//   // State melacak item yang sedang dihapus (untuk loading spinner per baris)
+//   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+//   // Fungsi untuk memuat daftar portfolio dari database
+//   const loadPortfolio = async () => {
+//     try {
+//       const response = await fetch("/api/portfolio");
+//       if (response.ok) {
+//         const data = await response.json();
+//         setItems(data);
+//       }
+//     } catch (error) {
+//       console.error("Gagal mengambil data portfolio:", error);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     loadPortfolio();
+//   }, []);
 export default function AdminDashboard() {
   // State untuk daftar portfolio
   const [items, setItems] = useState<PortfolioItem[]>([]);
@@ -37,27 +65,40 @@ export default function AdminDashboard() {
   // State loading
   const [isLoading, setIsLoading] = useState(true);
 
-  // State melacak item yang sedang dihapus (untuk loading spinner per baris)
+  // State melacak item yang sedang dihapus
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // Fungsi untuk memuat daftar portfolio dari database
-  const loadPortfolio = async () => {
-    try {
-      const response = await fetch("/api/portfolio");
-      if (response.ok) {
-        const data = await response.json();
-        setItems(data);
-      }
-    } catch (error) {
-      console.error("Gagal mengambil data portfolio:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // Fetch data portfolio menggunakan useEffect
   useEffect(() => {
-    loadPortfolio();
-  }, []);
+    // Tandai apakah komponen masih aktif (mencegah memory leak)
+    let isMounted = true;
+
+    const fetchPortfolio = async () => {
+      try {
+        const response = await fetch("/api/portfolio");
+        if (response.ok) {
+          const data = await response.json();
+          // Hanya update state jika komponen masih terpasang
+          if (isMounted) {
+            setItems(data);
+          }
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data portfolio:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchPortfolio();
+
+    // Cleanup function saat komponen unmount
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Array kosong berarti hanya jalan sekali saat komponen pertama kali dirender
 
   /**
    * Handler untuk menghapus portfolio.
@@ -90,7 +131,7 @@ export default function AdminDashboard() {
       if (response.ok) {
         // Hapus item dari state lokal agar tabel terupdate secara instan
         setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-        
+
         Swal.fire({
           title: "Terhapus!",
           text: "Karya portfolio berhasil dihapus.",

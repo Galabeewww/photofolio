@@ -42,8 +42,18 @@ export default function MediaUpload({
   const [progress, setProgress] = useState<number>(0);
 
   // Tentukan tipe file yang diizinkan berdasarkan kategori
-  const allowedImageTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-  const allowedVideoTypes = ["video/mp4", "video/webm", "video/mov", "video/quicktime"];
+  const allowedImageTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+  ];
+  const allowedVideoTypes = [
+    "video/mp4",
+    "video/webm",
+    "video/mov",
+    "video/quicktime",
+  ];
 
   // Tentukan accept attribute untuk input file berdasarkan kategori
   const acceptAttribute = category === "video" ? "video/*" : "image/*";
@@ -82,22 +92,22 @@ export default function MediaUpload({
 
             if (category === "video" && fileIsImage) {
               throw new Error(
-                `File "${file.name}" adalah gambar. Kategori yang dipilih adalah Video, jadi hanya file video yang diizinkan.`
+                `File "${file.name}" adalah gambar. Kategori yang dipilih adalah Video, jadi hanya file video yang diizinkan.`,
               );
             } else if (category === "photo" && fileIsVideo) {
               throw new Error(
-                `File "${file.name}" adalah video. Kategori yang dipilih adalah Foto, jadi hanya file gambar yang diizinkan.`
+                `File "${file.name}" adalah video. Kategori yang dipilih adalah Foto, jadi hanya file gambar yang diizinkan.`,
               );
             } else {
               throw new Error(
-                `Tipe file "${file.name}" (${file.type}) tidak didukung. Hanya file ${expectedTypeLabel} yang diizinkan.`
+                `Tipe file "${file.name}" (${file.type}) tidak didukung. Hanya file ${expectedTypeLabel} yang diizinkan.`,
               );
             }
           }
 
           if (file.size > 100 * 1024 * 1024) {
             throw new Error(
-              `Ukuran file "${file.name}" terlalu besar (Maks. 100MB).`
+              `Ukuran file "${file.name}" terlalu besar (Maks. 100MB).`,
             );
           }
           objectUrls.push(URL.createObjectURL(file));
@@ -140,7 +150,7 @@ export default function MediaUpload({
         });
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Terjadi kesalahan saat upload"
+          err instanceof Error ? err.message : "Terjadi kesalahan saat upload",
         );
         // Reset preview ke daftar media yang sudah ada
         setPreviews(currentMediaUrls);
@@ -149,7 +159,14 @@ export default function MediaUpload({
         setProgress(0);
       }
     },
-    [onUploadComplete, currentMediaUrls, category, allowedImageTypes, allowedVideoTypes, expectedTypeLabel]
+    [
+      onUploadComplete,
+      currentMediaUrls,
+      category,
+      allowedImageTypes,
+      allowedVideoTypes,
+      expectedTypeLabel,
+    ],
   );
 
   /**
@@ -162,7 +179,7 @@ export default function MediaUpload({
       const files = e.dataTransfer.files;
       if (files && files.length > 0) uploadFiles(files);
     },
-    [uploadFiles]
+    [uploadFiles],
   );
 
   /**
@@ -173,7 +190,7 @@ export default function MediaUpload({
       const files = e.target.files;
       if (files && files.length > 0) uploadFiles(files);
     },
-    [uploadFiles]
+    [uploadFiles],
   );
 
   /**
@@ -191,11 +208,13 @@ export default function MediaUpload({
   return (
     <div className="space-y-4">
       {/* Indikator jenis file yang diterima */}
-      <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium ${
-        category === "video"
-          ? "bg-violet-500/10 border border-violet-500/20 text-violet-300"
-          : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-300"
-      }`}>
+      <div
+        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium ${
+          category === "video"
+            ? "bg-violet-500/10 border border-violet-500/20 text-violet-300"
+            : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-300"
+        }`}
+      >
         {category === "video" ? (
           <>
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -205,10 +224,21 @@ export default function MediaUpload({
           </>
         ) : (
           <>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+              />
             </svg>
-            Mode Foto — Hanya file gambar yang diterima (.jpg, .png, .webp, .gif)
+            Mode Foto — Hanya file gambar yang diterima (.jpg, .png, .webp,
+            .gif)
           </>
         )}
       </div>
@@ -253,7 +283,11 @@ export default function MediaUpload({
           <div className="space-y-3">
             <div className="w-12 h-12 mx-auto rounded-full bg-[#A855F7]/10 flex items-center justify-center">
               {category === "video" ? (
-                <svg className="w-6 h-6 text-[#A855F7]" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-6 h-6 text-[#A855F7]"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M8 5v14l11-7z" />
                 </svg>
               ) : (
@@ -274,8 +308,8 @@ export default function MediaUpload({
             </div>
             <div>
               <p className="text-white text-sm font-medium">
-                Drag & drop beberapa {category === "video" ? "video" : "foto"} atau{" "}
-                <span className="text-[#A855F7]">klik untuk browse</span>
+                Drag & drop beberapa {category === "video" ? "video" : "foto"}{" "}
+                atau <span className="text-[#A855F7]">klik untuk browse</span>
               </p>
               <p className="text-gray-500 text-xs mt-1">
                 {category === "video"
@@ -302,7 +336,10 @@ export default function MediaUpload({
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {previews.map((url, idx) => {
-              const isVideo = checkIsVideo(url);
+              // 1. Deteksi video: cek ekstensi URL, ATAU jika itu blob URL gunakan prop `category`
+              const isVideo = url.startsWith("blob:")
+                ? category === "video"
+                : checkIsVideo(url);
 
               return (
                 <div
@@ -311,7 +348,8 @@ export default function MediaUpload({
                 >
                   {isVideo ? (
                     <video
-                      src={url}
+                      // 2. Tambahkan #t=0.1 agar browser langsung memuat dan menampilkan frame pertama
+                      src={`${url}#t=0.1`}
                       className="w-full h-full object-cover"
                       muted
                       loop
@@ -329,6 +367,20 @@ export default function MediaUpload({
                       className="object-cover"
                     />
                   )}
+
+                  {/* --- TAMBAH INI: Ikon Play untuk Video --- */}
+                  {isVideo && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
+                      <svg
+                        className="w-6 h-6 text-white/90"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  )}
+
                   {/* Overlay & Tombol Hapus */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <button
@@ -357,6 +409,68 @@ export default function MediaUpload({
             })}
           </div>
         </div>
+
+        // <div className="space-y-2">
+        //   <p className="text-xs text-gray-400 font-medium">
+        //     Media Terunggah ({previews.length})
+        //   </p>
+        //   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        //     {previews.map((url, idx) => {
+        //       const isVideo = checkIsVideo(url);
+
+        //       return (
+        //         <div
+        //           key={idx}
+        //           className="relative group rounded-lg overflow-hidden aspect-video bg-[#1E1B4B]/30 border border-white/10"
+        //         >
+        //           {isVideo ? (
+        //             <video
+        //               src={url}
+        //               className="w-full h-full object-cover"
+        //               muted
+        //               loop
+        //               playsInline
+        //               preload="metadata"
+        //               onMouseEnter={(e) => e.currentTarget.play()}
+        //               onMouseLeave={(e) => e.currentTarget.pause()}
+        //             />
+        //           ) : (
+        //             <Image
+        //               src={url}
+        //               alt={`Preview ${idx + 1}`}
+        //               fill
+        //               sizes="(max-width: 768px) 50vw, 25vw"
+        //               className="object-cover"
+        //             />
+        //           )}
+        //           {/* Overlay & Tombol Hapus */}
+        //           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        //             <button
+        //               type="button"
+        //               onClick={() => handleRemoveMedia(idx)}
+        //               className="p-1.5 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors"
+        //               title="Hapus media ini"
+        //             >
+        //               <svg
+        //                 className="w-4 h-4"
+        //                 fill="none"
+        //                 viewBox="0 0 24 24"
+        //                 stroke="currentColor"
+        //               >
+        //                 <path
+        //                   strokeLinecap="round"
+        //                   strokeLinejoin="round"
+        //                   strokeWidth={2}
+        //                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+        //                 />
+        //               </svg>
+        //             </button>
+        //           </div>
+        //         </div>
+        //       );
+        //     })}
+        //   </div>
+        // </div>
       )}
     </div>
   );
